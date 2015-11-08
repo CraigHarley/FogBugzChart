@@ -1,0 +1,64 @@
+<head>
+	<title>FogBugzChart</title>
+</head>
+
+<body>
+{{> navbar}}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			{{> menu}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			{{> chart}}
+		</div>
+	</div>
+
+</div>
+  
+  
+</body>
+<template name="navbar">
+<nav class="navbar navbar-inverse">
+	<a class="navbar-brand" href="#">Title</a>
+	<ul class="nav navbar-nav">
+		<li class="active">
+			<a href="#">Home</a>
+		</li>
+		<li>
+			<a href="#">Link</a>
+		</li>
+	</ul>
+</nav>
+</template>
+<template name="menu">
+<div class="well">
+	 <form class="menu">
+	 	<div class="row">
+	 		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+		 		<div class="row">
+		 			<span class="label label-info">Enter your token and hit enter.</span>
+	        		<input type="text" name="TxtToken" id="TxtToken" class="form-control" value="" required="required" pattern="" title="">	 			
+		 		</div>
+	        	<div id="messageContainer" class="row"></div>
+	 		</div>
+	 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+	 			<button type="button" class="btn btn-primary btnMenu"  id="btnVerify">Verify</button>
+        		<button type="button" class="btn btn-success btnMenu"  id="btnData">Get Data</button>
+        		<button type="button" class="btn btn-warning btnMenu"  id="btnLogoff">Logoff</button>
+	 		</div>
+	 	</div>
+
+      </form>
+</div>
+     
+</template>
+<template name="chart">
+	<div class="chartWrapper">
+		<canvas id="myChart"></canvas>
+	</div>
+	
+</template>
+

@@ -9,7 +9,6 @@
 	padding-top: 15px;
 	padding-bottom: 15px;
 	padding-left: 15px;
-
 	margin-top: 20px;
 }
 .message:after{
@@ -21,4 +20,9 @@
 	width: 150px;
 	margin-left: auto;
 	margin-right: auto;
+}
+.centered {
+	display: block; /* so this class will work with inline elements too */
+	margin:0 auto;
+	text-align: center;
 }

@@ -34,8 +34,8 @@ if (Meteor.isClient) {
             //get the date/time in the proper formats using moment
             for (i = 0; i < array.length; i++){
                 array[i].dtStartDay = moment(array[i].dtStart).format('Do MMM YY');
-                array[i].dtStartTime = moment(array[i].dtStart).format('HH:MM');
-                array[i].dtFinishTime = moment(array[i].dtEnd).format('HH:MM');
+                array[i].dtStartTime = moment(array[i].dtStart).format('HHmm');
+                array[i].dtFinishTime = moment(array[i].dtEnd).format('HHmm');
             }
 
             var groupedData = _.groupBy(array, function(x){
@@ -71,29 +71,37 @@ if (Meteor.isClient) {
                   labels: dataForChart.dates,
                   datasets: [
                   {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
+                    label: "Finish Times",
+                    fillColor: "rgba(151,187,205,0.4)",
                     strokeColor: "rgba(220,220,220,1)",
                     pointColor: "rgba(220,220,220,1)",
                     pointStrokeColor: "#fff",
                     pointHighlightFill: "#fff",
                     pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: dataForChart.startTimes
+                    data:  dataForChart.finishTimes
                   },
                   {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.2)",
+                    label: "Start Times",
+                    fillColor: "rgba(255,255,255, 0.7)",
                     strokeColor: "rgba(151,187,205,1)",
                     pointColor: "rgba(151,187,205,1)",
                     pointStrokeColor: "#fff",
                     pointHighlightFill: "#fff",
                     pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: dataForChart.finishTimes
+                    data: dataForChart.startTimes
                   }
                   ]
                 };
                 var options = {
-                  responsive: true
+                  responsive: true,
+                  barValueSpacing: 5,
+                  animation: true,
+                  scaleBeginAtZero: false,
+                  scaleGridLineColor : "rgba(0,0,0,1)",
+                  legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+
+
+
                 };
                 var myLineChart = new Chart(ctx).Line(data, options);
 
@@ -102,7 +110,6 @@ if (Meteor.isClient) {
         else if (event.target.id === 'btnLogoff'){
             $('#messageContainer').hide().html('').append('<div class="message alert-success">You logged off, good job.</div>').fadeIn();
         }
-        debugger;
       }
     }
   });
@@ -127,7 +134,6 @@ if (Meteor.isClient) {
       },
       getInfo: function (token) {
         //return the dataset for chart
-        debugger;
         var response = HTTP.call( 'GET', 'https://webapplications.fogbugz.com/api.asp?cmd=listIntervals&token=' + token, {} );
         return response.content;
       },

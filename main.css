@@ -4,6 +4,7 @@
 
 .chartWrapper {
 	width:100%;
+	padding: 5px, 5px, 5px, 5px;
 }
 .message {
 	padding-top: 15px;

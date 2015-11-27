@@ -18,7 +18,7 @@ if (Meteor.isClient) {
               $('#messageContainer').hide().html('').append('<div class="message alert-danger">You have entered an invalid token, try again.</div>').fadeIn();
               $('#btnVerify').text('Verify');
             }
-            else if (Response.indexOf('error') != -1 ){
+            else {
               $('#messageContainer').hide().html('').append('<div class="message alert-success">Your token appears to be valid.</div>').fadeIn();
               $('#btnVerify').text('Verify');
             }
@@ -30,12 +30,11 @@ if (Meteor.isClient) {
           Meteor.call('getInfo', token, function (error, result) {
             Response = $.xml2json(result);
             var array = Response.response.intervals.interval;
-
             //get the date/time in the proper formats using moment
             for (i = 0; i < array.length; i++){
                 array[i].dtStartDay = moment(array[i].dtStart).format('Do MMM YY');
-                array[i].dtStartTime = moment(array[i].dtStart).format('HH:MM');
-                array[i].dtFinishTime = moment(array[i].dtEnd).format('HH:MM');
+                array[i].dtStartTime = moment(array[i].dtStart).format('HHmm');
+                array[i].dtFinishTime = moment(array[i].dtEnd).format('HHmm');
             }
 
             var groupedData = _.groupBy(array, function(x){
@@ -49,9 +48,9 @@ if (Meteor.isClient) {
                 dataForChart.finishTimes = new Array;
                 dataForChart.dates = new Array;
 
-                for (i = 0; i < sortedData.length; i++){
-                    dataForChart.startTimes.push(sortedData[i][0].dtStartTime);
-                    dataForChart.finishTimes.push(sortedData[i][sortedData[i].length - 1].dtFinishTime);
+                for (i = 0; i < sortedData.length-1; i++){
+                    dataForChart.startTimes.push(parseInt(sortedData[i][0].dtStartTime));
+                    dataForChart.finishTimes.push(parseInt(sortedData[i][sortedData[i].length - 1].dtFinishTime));
                     dataForChart.dates.push(sortedData[i][0].dtStartDay);
                 }
                 for (i = 0; i < dataForChart.startTimes.length; i++) {
@@ -65,44 +64,55 @@ if (Meteor.isClient) {
 
 
                 // Get context with jQuery - using jQuery's .get() method.
-                var ctx = $("#myChart").get(0).getContext("2d");
+                var canvas = $("#myChart").get(0); // or document.getElementById('canvas');
+                    canvas.width = canvas.width;
+                    debugger;
+                var ctx = canvas.getContext("2d");
+
                 // This will get the first returned node in the jQuery collection.
                 var data = {
-                  labels: dataForChart.dates,
-                  datasets: [
-                  {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: dataForChart.startTimes
-                  },
-                  {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.2)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: dataForChart.finishTimes
-                  }
-                  ]
-                };
+                    labels: dataForChart.dates,
+                    datasets: [
+                    {
+                      label: "Finish Times",
+                      fillColor: "rgba(255,187,205,0.0)",
+                      strokeColor: "rgba(151,187,205,1)",
+                      pointColor: "rgba(151,187,205,1)",
+                      pointStrokeColor: "#fff",
+                      pointHighlightFill: "#fff",
+                      pointHighlightStroke: "rgba(151,187,205,1)",
+                      data: dataForChart.finishTimes
+                    },
+                    {
+                      label: "Start Times",
+                      fillColor: "rgba(122,122,220,0.0)",
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(155,220,155,1)",
+                      pointStrokeColor: "#fff",
+                      pointHighlightFill: "#fff",
+                      pointHighlightStroke: "rgba(220,220,220,1)",
+                      data: dataForChart.startTimes
+                    }
+                    ]
+                  };
                 var options = {
-                  responsive: true
-                };
-                var myLineChart = new Chart(ctx).Line(data, options);
+                  responsive: true,
+                  showScale: true,
+                  animation: true,
+                  legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+                  barValueSpacing : 8,
+                  barDatasetSpacing : 3,
+                  pointHitDetectionRadius : 1
 
+                };
+
+                var myLineChart = new Chart(ctx).Line(data, options);
+                debugger;
           });
         }
         else if (event.target.id === 'btnLogoff'){
             $('#messageContainer').hide().html('').append('<div class="message alert-success">You logged off, good job.</div>').fadeIn();
         }
-        debugger;
       }
     }
   });
@@ -127,7 +137,6 @@ if (Meteor.isClient) {
       },
       getInfo: function (token) {
         //return the dataset for chart
-        debugger;
         var response = HTTP.call( 'GET', 'https://webapplications.fogbugz.com/api.asp?cmd=listIntervals&token=' + token, {} );
         return response.content;
       },

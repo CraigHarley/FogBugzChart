@@ -71,6 +71,7 @@ if (Meteor.isClient) {
 
                 // This will get the first returned node in the jQuery collection.
                 var data = {
+<<<<<<< HEAD
                     labels: dataForChart.dates,
                     datasets: [
                     {
@@ -103,6 +104,41 @@ if (Meteor.isClient) {
                   barValueSpacing : 8,
                   barDatasetSpacing : 3,
                   pointHitDetectionRadius : 1
+=======
+                  labels: dataForChart.dates,
+                  datasets: [
+                  {
+                    label: "Finish Times",
+                    fillColor: "rgba(151,187,205,0.4)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data:  dataForChart.finishTimes
+                  },
+                  {
+                    label: "Start Times",
+                    fillColor: "rgba(255,255,255, 0.7)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: dataForChart.startTimes
+                  }
+                  ]
+                };
+                var options = {
+                  responsive: true,
+                  barValueSpacing: 5,
+                  animation: true,
+                  scaleBeginAtZero: false,
+                  scaleGridLineColor : "rgba(0,0,0,1)",
+                  legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+
+
+>>>>>>> 89fa0ca8e972d9a0c809715bc728afbc30af1983
 
                 };
 
